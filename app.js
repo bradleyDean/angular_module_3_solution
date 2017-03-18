@@ -7,59 +7,38 @@ angular.module('NarrowItDownApp', [])
 .constant('ApiBasePath', "http://davids-restaurant.herokuapp.com");
 
 NarrowItDownController.$inject = ['MenuSearchService'];
-function MenuSearchService(MenuSearchService) {
+function NarrowItDownController(MenuSearchService) {
   var searcher = this;
   var searchTerm = "";
 
-  var promise = MenuSearchService.getMatchedMenuItems(searchTerm); //TO DO: implement getMatchedMenuItems
+  searcher.getMatchedMenuItems = function(searchTerm){
+      var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
+      promise.then(function(){})
+      .catch(function(error){
+          console.log(error);
+      });
 
-  promise.then(function (response) {
-    searcher.found = response.data;
-    console.log("found is:");
-    console.log(searcher.found);
-  })
-  .catch(function (error) {
-    console.log("No results found.");
-  });
-
-  searcher.logMenuItems = function (shortName) {
-    var promise = MenuCategoriesService.getMenuForCategory(shortName);
-
-    promise.then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.log(error);
-    })
   };
 
-}
+  }
 /////////////*********** Services********** //////////
 MenuSearchService.$inject = ['$http', 'ApiBasePath'];
 function MenuSearchService($http, ApiBasePath) {
   var service = this;
-
   service.getMatchedMenuItems= function (searchTerm) {
-    var response = $http({
-      method: "GET",
+  var items = [];
+    $http({
       url: (ApiBasePath +  "/menu_items.json")
-    });
+    }).then(function(response){
+        for (var i=0;i<response.data.menu_items.length;i++){
+            if (response.data.menu_items[i].description.toLowerCase().indexOf(searchTerm)!==-1){
+                items.push(response.data.menu_items[i]);
+                console.log("adding item:");
+                console.log(response.data.menu_items[i].name);
+            }
+        }
 
-    return response;
+    }).catch();
   };
-
-
-  service.getMenuForCategory = function (shortName) {
-    var response = $http({
-      method: "GET",
-      url: (ApiBasePath + "/menu_items.json"),
-      params: {
-        category: shortName
-      }
-    });
-
-    return response;
-  };
-
 }
-});
+})();
