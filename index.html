@@ -18,6 +18,9 @@
     </div>
     <div class="form-group narrow-button">
       <button class="btn btn-primary" ng-click='searcher.getMatchedMenuItems(searchTerm);'>Narrow It Down For Me!</button>
+      <ol >
+          <li ng-repeat='item in searcher.found'>{{item.name}}</li>
+      </ol>
     </div>
 
     <!-- found-items should be implemented as a component -->

@@ -12,15 +12,12 @@ function NarrowItDownController(MenuSearchService) {
   var searchTerm = "";
 
   searcher.getMatchedMenuItems = function(searchTerm){
-      var promise = MenuSearchService.getMatchedMenuItems(searchTerm);
-      promise.then(function(){})
-      .catch(function(error){
-          console.log(error);
-      });
+          searcher.found = MenuSearchService.getMatchedMenuItems(searchTerm);
 
+          console.log(searcher.found);
+      };
   };
 
-  }
 /////////////*********** Services********** //////////
 MenuSearchService.$inject = ['$http', 'ApiBasePath'];
 function MenuSearchService($http, ApiBasePath) {
@@ -33,12 +30,18 @@ function MenuSearchService($http, ApiBasePath) {
         for (var i=0;i<response.data.menu_items.length;i++){
             if (response.data.menu_items[i].description.toLowerCase().indexOf(searchTerm)!==-1){
                 items.push(response.data.menu_items[i]);
-                console.log("adding item:");
-                console.log(response.data.menu_items[i].name);
+                //console.log("adding item:");
+                //console.log(response.data.menu_items[i].name);
+                }
             }
-        }
-
-    }).catch();
+        })
+      .catch(function(error){
+        console.log("error retrieving data");
+        });
+      
+        console.log("Returning items:");
+        console.log(items);
+      return items;
   };
 }
 })();
