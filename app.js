@@ -5,7 +5,7 @@ angular.module('NarrowItDownApp', [])
 .controller('NarrowItDownController', NarrowItDownController)
 .service('MenuSearchService', MenuSearchService)
 .directive('foundItems',FoundItems)
-.constant('ApiBasePath', "http://davids-restaurant.herokuapp.com");
+.constant('ApiBasePath', "https://davids-restaurant.herokuapp.com");
 
 function FoundItems(){
     //directive definition object:
@@ -79,7 +79,7 @@ function MenuSearchService($http, ApiBasePath) {
           return {foundItems: found};
        })
       .catch(function(error){
-          console.lot("Something Went Wrong!");
+          //console.lot("Something Went Wrong!");
           return {foundItems: []};
       });
    } //end getMatchedMenuItems
